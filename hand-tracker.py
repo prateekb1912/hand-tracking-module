@@ -5,10 +5,21 @@ import numpy as np
 
 class HandDetector():
     def __init__(self, mode = False, maxHands = 2, min_detect_conf = 0.5, min_track_conf = 0.5):
+        """
+        Initializes the hand detector object
+        """
         self.mode = mode
         self.maxHands = maxHands
         self.detect_conf = min_detect_conf
         self.track_conf = min_track_conf
+
+
+        # Create a mediapipe Hands object to detect hands in any image
+        self.mpHands = mp.solutions.hands
+        self.hands = self.mpHands.Hands(self.mode, self.maxHands, self.detect_conf, self.track_conf)
+        self.mpDraw = mp.solutions.drawing_utils
+
+
 
 
 def main():
