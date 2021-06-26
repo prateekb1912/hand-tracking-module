@@ -30,19 +30,31 @@ class HandDetector():
         imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
         # Processing the image to look for hand features
-        results = self.hands.process(imgRGB)
+        self.results = self.hands.process(imgRGB)
 
-        if results.multi_hand_landmarks:
+        if self.results.multi_hand_landmarks:
             # Draw all of the hand landmarks 
-            for handLms in results.multi_hand_landmarks:
-                # for idx, lm in enumerate(handLms.landmark):
-                #     h,w,c = img.shape
-                #     cx, cy = int(lm.x * w), int(lm.y * h)
-
-                #     cv2.circle(img, (cx, cy), 15, (255, 0, 255), cv2.FILLED)
+            for handLms in self.results.multi_hand_landmarks:
                 self.mpDraw.draw_landmarks(img, handLms, self.mpHands.HAND_CONNECTIONS) 
         
         return img
+
+    def findPosition(self, img, handNo = 0):
+
+        lmList = []
+
+        if self.results.multi_hand_landmarks:
+            myHand = self.results.multi_hand_landmarks[handNo]
+
+            for idx, lm in enumerate(myHand.landmark):
+                        h,w,c = img.shape
+                        cx, cy = int(lm.x * w), int(lm.y * h)
+
+                        lmList.append([idx, cx, cy])
+
+                        cv2.circle(img, (cx, cy), 15, (255, 0, 255), cv2.FILLED)
+        
+        return lmList
 
 def main():
     pTime = 0
@@ -55,6 +67,10 @@ def main():
         _, img = cap.read()
         img = cv2.flip(img, 1)
         img = detector.findHands(img)
+        lmList = detector.findPosition(img)
+
+        if(len(lmList) != 0):
+            print(lmList[12])
 
         cTime = time.time()
         fps = 1/(cTime - pTime)     # Calculated frame rate for the stream
