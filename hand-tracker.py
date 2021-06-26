@@ -35,20 +35,26 @@ class HandDetector():
         if results.multi_hand_landmarks:
             # Draw all of the hand landmarks 
             for handLms in results.multi_hand_landmarks:
-                for idx, lm in enumerate(handLms.landmark):
-                    h,w,c = img.shape
-                    cx, cy = int(lm.x * w), int(lm.y * h)
+                # for idx, lm in enumerate(handLms.landmark):
+                #     h,w,c = img.shape
+                #     cx, cy = int(lm.x * w), int(lm.y * h)
 
-                    cv2.circle(img, (cx, cy), 15, (255, 0, 255), cv2.FILLED) 
+                #     cv2.circle(img, (cx, cy), 15, (255, 0, 255), cv2.FILLED)
+                self.mpDraw.draw_landmarks(img, handLms, self.mpHands.HAND_CONNECTIONS) 
+        
+        return img
 
 def main():
     pTime = 0
     cTime = 0
     cap = cv2.VideoCapture(0)
+    detector = HandDetector()
 
     # Start the video stream and end only when user hits 'ESC'
     while(cv2.waitKey(1) != 27):
         _, img = cap.read()
+        img = cv2.flip(img, 1)
+        img = detector.findHands(img)
 
         cTime = time.time()
         fps = 1/(cTime - pTime)     # Calculated frame rate for the stream
