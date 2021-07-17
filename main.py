@@ -1,21 +1,18 @@
 import cv2
-import mediapipe as mp
 import time
-import numpy as np
-from HandDetectorModule import HandDetector
+from HandDetectorModule.tracker import HandDetector
 
 def main():
     pTime = 0
     cTime = 0
     cap = cv2.VideoCapture(0)
-    detector = HandDetector(min_detect_conf = 0.6, min_track_conf = 0.7)
+    detector = HandDetector(maxHands=1)
 
     # Start the video stream and end only when user hits 'ESC'
     while(cv2.waitKey(1) != 27):
         _, img = cap.read()
         img = cv2.flip(img, 1)
         img = detector.findHands(img)
-        lmList = detector.findPosition(img)
 
         cTime = time.time()
         fps = 1/(cTime - pTime)     # Calculated frame rate for the stream
