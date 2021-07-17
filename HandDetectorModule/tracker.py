@@ -1,5 +1,6 @@
 import cv2
 import mediapipe as mp
+import json
 
 class HandDetector():
     def __init__(self, mode=False, maxHands=2, min_detect_conf=0.5, min_track_conf=0.5):
@@ -35,3 +36,19 @@ class HandDetector():
                 self.mpDraw.draw_landmarks(img, handLms, self.mpHands.HAND_CONNECTIONS) 
         
         return img
+    
+    def findPosition(self, img, handNo = 0, landmark = 0):
+        """
+        Detects the position of the desired landmarks on the hands
+        and draw on the image
+        """
+
+        if self.results.multi_hand_landmarks:
+            myHand = self.results.multi_hand_landmarks[handNo]
+
+            for idx, lm in enumerate(myHand.landmark):
+                        h,w,c = img.shape
+                        cx, cy = int(lm.x * w), int(lm.y * h)
+                        if idx == landmark:
+
+                            cv2.circle(img, (cx, cy), 15, (255, 0, 255), cv2.FILLED)

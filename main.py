@@ -14,6 +14,8 @@ def main():
         img = cv2.flip(img, 1)
         img = detector.findHands(img)
 
+        detector.findPosition(img)
+
         cTime = time.time()
         fps = 1/(cTime - pTime)     # Calculated frame rate for the stream
         pTime = cTime
@@ -26,3 +28,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
