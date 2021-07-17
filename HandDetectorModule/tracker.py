@@ -42,7 +42,7 @@ class HandDetector():
         Detects the position of the desired landmarks on the hands
         and draw on the image
         """
-
+        lmList = []
         if self.results.multi_hand_landmarks:
             myHand = self.results.multi_hand_landmarks[handNo]
 
@@ -50,5 +50,7 @@ class HandDetector():
                         h,w,c = img.shape
                         cx, cy = int(lm.x * w), int(lm.y * h)
                         if idx in landmarks:
-
+                            lmList.append(idx, cx, cy)
                             cv2.circle(img, (cx, cy), 15, (108, 110, 35), cv2.FILLED)
+        
+        return lmList
